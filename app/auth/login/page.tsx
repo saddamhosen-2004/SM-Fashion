@@ -54,12 +54,14 @@ function LoginFormContent() {
             </span>
           </Link>
           <h2 className="mt-4 text-2xl font-bold text-slate-900">Sign in to your account</h2>
-          <p className="mt-2 text-xs text-muted-foreground">
-            Don&rsquo;t have an account?{' '}
-            <Link href="/auth/register" className="font-semibold text-primary hover:underline">
-              Create an account
-            </Link>
-          </p>
+          {!redirectTo.startsWith('/admin') && (
+            <p className="mt-2 text-xs text-muted-foreground">
+              Don&rsquo;t have an account?{' '}
+              <Link href="/auth/register" className="font-semibold text-primary hover:underline">
+                Create an account
+              </Link>
+            </p>
+          )}
         </div>
 
         <form onSubmit={handleLogin} className="space-y-4 mt-6">
