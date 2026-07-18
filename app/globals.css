@@ -169,21 +169,64 @@ html.font-english, html.font-english body, html.font-english button, html.font-e
   animation: scaleIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-/* Base interactive transitions */
-button, a, input, select, textarea {
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+/* Base interactive transitions for every element */
+button, a, input, select, textarea, svg, img {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Hover scales and movement */
-.hover-scale {
-  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+/* Make headings fade in and slide up when loaded */
+h1, h2, h3, h4, h5, h6 {
+  animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
-.hover-scale:hover {
-  transform: scale(1.02) translateY(-2px);
+
+/* Make paragraphs and standard text fade in smoothly */
+p, label, li, td, th {
+  animation: fadeIn 0.8s ease-out forwards;
+}
+
+/* Hover scales on buttons and links */
+button:hover, .btn:hover {
+  transform: scale(1.02) translateY(-1px);
+}
+button:active, .btn:active {
+  transform: scale(0.97);
+}
+
+/* Links hover motion */
+a:hover {
+  color: var(--primary);
+  transform: translateY(-0.5px);
+}
+
+/* Table Row Motion (especially useful for Admin dashboard) */
+tr {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+tr:hover {
+  background-color: rgba(0, 106, 78, 0.02) !important;
+  transform: scale(1.002);
+}
+
+/* Form fields focus animation */
+input:focus, textarea:focus, select:focus {
+  transform: translateY(-1px) scale(1.005);
+  box-shadow: 0 4px 12px rgba(0, 106, 78, 0.1);
+  border-color: var(--primary);
+}
+
+/* Card and Container layouts entrance and hover animations */
+.card, [class*="bg-white p-6 rounded-xl"], [class*="bg-white p-8 rounded-2xl"] {
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: scaleIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+.card:hover, [class*="bg-white p-6 rounded-xl"]:hover, [class*="bg-white p-8 rounded-2xl"]:hover {
+  transform: translateY(-3px) scale(1.008);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.04);
 }
 
 .hover-glow:hover {
   box-shadow: 0 0 15px rgba(0, 106, 78, 0.15);
 }
+
 
 
