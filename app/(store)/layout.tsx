@@ -11,7 +11,7 @@ export default function StoreLayout({
     <div className="flex flex-col min-h-screen">
       <ToastProvider />
       <Navbar />
-      <main className="flex-1 bg-background">{children}</main>
+      <main className="flex-1 bg-background animate-fade-in">{children}</main>
       <Footer />
     </div>
   )

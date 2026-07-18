@@ -51,19 +51,19 @@ export function ProductCard({ product }: ProductCardProps) {
   }
 
   return (
-    <Link href={`/products/${product.slug}`} className="group flex flex-col bg-card rounded-lg overflow-hidden border border-border shadow-sm hover:shadow-md transition-all duration-300">
+    <Link href={`/products/${product.slug}`} className="group flex flex-col bg-card rounded-lg overflow-hidden border border-border shadow-sm hover:shadow-lg hover:border-primary/20 hover:scale-[1.02] hover:-translate-y-1 transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] animate-fade-in-up">
       <div className="relative aspect-square overflow-hidden bg-muted">
         <Image
           src={primaryImage}
           alt={displayName}
           fill
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          className="object-cover object-center group-hover:scale-105 transition-transform duration-500"
+          className="object-cover object-center group-hover:scale-108 transition-transform duration-500 ease-out"
           unoptimized={primaryImage.startsWith('http') || primaryImage.startsWith('/')}
         />
         
         {hasDiscount && (
-          <div className="absolute top-2 left-2 z-10">
+          <div className="absolute top-2 left-2 z-10 transition-transform group-hover:scale-110 duration-300">
             <Badge variant="secondary" className="font-bold">
               -{discountPercentage}%
             </Badge>
@@ -78,7 +78,7 @@ export function ProductCard({ product }: ProductCardProps) {
       </div>
 
       <div className="p-4 flex flex-col flex-1">
-        <h3 className="font-semibold text-sm text-foreground line-clamp-2 min-h-[40px] group-hover:text-primary transition-colors">
+        <h3 className="font-semibold text-sm text-foreground line-clamp-2 min-h-[40px] group-hover:text-primary transition-colors duration-200">
           {displayName}
         </h3>
         
@@ -98,7 +98,7 @@ export function ProductCard({ product }: ProductCardProps) {
             onClick={handleAddToCart}
             disabled={product.stock_quantity <= 0}
             variant="outline"
-            className="flex-1 flex items-center justify-center gap-1.5 h-9 text-xs font-bold border border-primary text-primary hover:bg-primary/5 rounded-full"
+            className="flex-1 flex items-center justify-center gap-1.5 h-9 text-xs font-bold border border-primary text-primary hover:bg-primary/5 rounded-full active:scale-95 transition-all duration-200"
             size="sm"
           >
             <ShoppingCart className="w-3.5 h-3.5 shrink-0" />
@@ -107,7 +107,7 @@ export function ProductCard({ product }: ProductCardProps) {
           <Button
             onClick={handleBuyNow}
             disabled={product.stock_quantity <= 0}
-            className="flex-1 flex items-center justify-center gap-1.5 h-9 text-xs font-bold bg-primary hover:bg-primary-hover text-white rounded-full shadow"
+            className="flex-1 flex items-center justify-center gap-1.5 h-9 text-xs font-bold bg-primary hover:bg-primary-hover text-white rounded-full shadow hover:shadow-primary/20 active:scale-95 transition-all duration-200"
             size="sm"
           >
             {t('product.buyNow')}
