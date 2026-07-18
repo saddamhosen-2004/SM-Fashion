@@ -61,17 +61,17 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
         {/* Left Sidebar - Categories & Filters */}
-        <div className="space-y-6">
-          <div className="bg-white p-6 rounded-xl border border-border shadow-sm space-y-4">
-            <h3 className="text-sm font-extrabold uppercase tracking-wider text-slate-950">Categories</h3>
-            <div className="flex flex-col gap-1">
+        <div className="lg:col-span-1">
+          <div className="bg-white p-4 lg:p-6 rounded-xl border border-border shadow-sm space-y-4">
+            <h3 className="text-sm font-extrabold uppercase tracking-wider text-slate-950 hidden lg:block">Categories</h3>
+            <div className="flex lg:flex-col gap-2 overflow-x-auto lg:overflow-visible pb-2 lg:pb-0 scrollbar-none snap-x">
               <Link
                 href="/products"
-                className={`text-sm py-1.5 px-3 rounded-lg hover:bg-slate-50 transition-colors ${
-                  !activeCategorySlug ? 'bg-primary/5 text-primary font-bold' : 'text-slate-600'
+                className={`text-xs lg:text-sm py-1.5 px-3 rounded-full lg:rounded-lg hover:bg-slate-50 transition-colors shrink-0 snap-align-start ${
+                  !activeCategorySlug ? 'bg-primary/10 text-primary font-bold border border-primary/20' : 'text-slate-600 border border-slate-150 lg:border-none'
                 }`}
               >
-                All Products ({categories.reduce((acc, cat) => acc + (cat.product_count || 0), 0)})
+                All ({categories.reduce((acc, cat) => acc + (cat.product_count || 0), 0)})
               </Link>
               {categories
                 .filter((c) => c.is_active && !c.parent_id)
@@ -79,17 +79,17 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
                   const children = categories.filter((c) => c.parent_id === parent.id && c.is_active)
                   const isParentActive = activeCategorySlug === parent.slug
                   return (
-                    <div key={parent.id} className="space-y-1 mt-2 first:mt-0">
+                    <div key={parent.id} className="flex lg:flex-col gap-1 shrink-0 lg:shrink lg:mt-2 lg:first:mt-0 snap-align-start">
                       <Link
                         href={`/products?category=${parent.slug}`}
-                        className={`text-sm py-1.5 px-3 rounded-lg hover:bg-slate-50 transition-colors flex justify-between items-center ${
-                          isParentActive ? 'bg-primary/5 text-primary font-bold' : 'text-slate-800 font-semibold'
+                        className={`text-xs lg:text-sm py-1.5 px-3 rounded-full lg:rounded-lg hover:bg-slate-50 transition-colors flex justify-between items-center border lg:border-none ${
+                          isParentActive ? 'bg-primary/10 text-primary font-bold border-primary/20' : 'text-slate-800 lg:font-semibold border-slate-150'
                         }`}
                       >
                         <span>{parent.name}</span>
                       </Link>
                       {children.length > 0 && (
-                        <div className="pl-4 flex flex-col gap-1 border-l border-slate-100 ml-3 mt-1">
+                        <div className="hidden lg:flex flex-col gap-1 border-l border-slate-100 ml-3 mt-1 pl-4">
                           {children.map((child) => (
                             <Link
                               key={child.id}
