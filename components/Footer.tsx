@@ -95,8 +95,9 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-8 pt-8 border-t border-slate-800 text-center text-xs text-slate-500">
+        <div className="mt-8 pt-8 border-t border-slate-800 text-center text-xs text-slate-500 space-y-1">
           <p>© {currentYear} SM Fashion. All rights reserved.</p>
+          <p className="text-slate-600">Developed with 💙 by Saddam Bin Mazid</p>
         </div>
       </div>
     </footer>
