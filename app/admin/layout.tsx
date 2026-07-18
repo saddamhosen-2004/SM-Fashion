@@ -39,14 +39,25 @@ export default function AdminLayout({
   useEffect(() => {
     async function checkAdmin() {
       const { data: { user } } = await supabase.auth.getUser()
-      if (user) {
-        const { data: profile } = await supabase
-          .from('profiles')
-          .select('*')
-          .eq('id', user.id)
-          .single()
-        setProfile(profile)
+      if (!user) {
+        toast.error('Access denied. Please log in.')
+        router.push('/auth/login?redirectTo=/admin')
+        return
       }
+
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', user.id)
+        .maybeSingle()
+
+      if (!profile || (profile.role !== 'admin' && profile.role !== 'staff')) {
+        toast.error('Access denied. Admins only.')
+        router.push('/')
+        return
+      }
+
+      setProfile(profile)
       setLoading(false)
     }
     checkAdmin()
