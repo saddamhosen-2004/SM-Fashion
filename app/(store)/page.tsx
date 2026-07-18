@@ -26,20 +26,29 @@ export default async function StoreHomepage() {
     getProducts({ limit: 100, sortBy: 'newest' }),
     getCategories()
   ])
-
   // Filter root categories
   const rootCategories = categories.filter(c => c.is_active && !c.parent_id).slice(0, 4)
 
-  // Map products to categories for category-wise display
+  // Build a map of root category → all child category IDs (including itself)
+  const categoryChildMap: Record<string, string[]> = {}
+  rootCategories.forEach((root) => {
+    const childIds = categories
+      .filter(c => c.parent_id === root.id)
+      .map(c => c.id)
+    categoryChildMap[root.id] = [root.id, ...childIds]
+  })
+
+  // Map products to root categories including subcategory products
   const categoriesWithProducts = rootCategories.map((cat) => {
-    const catProducts = allProducts.filter((p) => p.category_id === cat.id).slice(0, 4)
+    const allCatIds = categoryChildMap[cat.id] || [cat.id]
+    const catProducts = allProducts.filter((p) => allCatIds.includes(p.category_id || '')).slice(0, 4)
     return {
       ...cat,
       products: catProducts
     }
   }).filter(c => c.products.length > 0)
 
-  // Fallback to general featured items if no categories have items
+  // Featured products section (always shown)
   const featured = allProducts.filter(p => p.is_featured).slice(0, 4)
   const fallbackFeatured = featured.length > 0 ? featured : allProducts.slice(0, 4)
 
