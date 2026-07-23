@@ -21,6 +21,7 @@ export function ProductForm({ initialData, productId }: ProductFormProps) {
   const [categories, setCategories] = useState<Category[]>([])
   const [loadingCats, setLoadingCats] = useState(true)
   const [saving, setSaving] = useState(false)
+  const [uploading, setUploading] = useState(false)
 
   // Form states
   const [name, setName] = useState(initialData?.name || '')
@@ -103,6 +104,55 @@ export function ProductForm({ initialData, productId }: ProductFormProps) {
     ])
     setImageUrlInput('')
     toast.success('Image link added')
+  }
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files
+    if (!files || files.length === 0) return
+
+    setUploading(true)
+    try {
+      const uploadedImages = []
+      
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i]
+        const fileExt = file.name.split('.').pop()
+        const randomString = Math.random().toString(36).substring(2, 15)
+        const fileName = `${Date.now()}-${randomString}.${fileExt}`
+        const filePath = `${fileName}`
+
+        // Upload to supabase bucket 'products'
+        const { error: uploadError } = await supabase.storage
+          .from('products')
+          .upload(filePath, file, {
+            cacheControl: '3600',
+            upsert: false
+          })
+
+        if (uploadError) throw uploadError
+
+        // Get public URL
+        const { data: { publicUrl } } = supabase.storage
+          .from('products')
+          .getPublicUrl(filePath)
+
+        uploadedImages.push({
+          url: publicUrl,
+          alt: name || 'Product Image',
+          display_order: images.length + i,
+          is_primary: images.length === 0 && i === 0
+        })
+      }
+
+      setImages([...images, ...uploadedImages])
+      toast.success(`${files.length} image(s) uploaded successfully`)
+    } catch (error: any) {
+      toast.error('Failed to upload image: ' + error.message)
+    } finally {
+      setUploading(false)
+      // Reset input value
+      e.target.value = ''
+    }
   }
 
   const handleRemoveImage = (index: number) => {
@@ -385,21 +435,53 @@ export function ProductForm({ initialData, productId }: ProductFormProps) {
           <div className="bg-white p-6 rounded-lg border border-slate-200 shadow-sm space-y-4">
             <h3 className="text-lg font-semibold text-slate-900">Product Images</h3>
             
-            <div className="flex gap-2">
-              <Input
-                placeholder="Paste external image link (e.g. ImageKit URL)..."
-                value={imageUrlInput}
-                onChange={(e) => setImageUrlInput(e.target.value)}
-              />
-              <Button type="button" onClick={handleAddImageUrl} variant="outline" className="shrink-0">
-                <Plus className="h-4 w-4 mr-2" /> Add Link
-              </Button>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Option 1: Paste URL</label>
+                <div className="flex gap-2">
+                  <Input
+                    placeholder="Paste external image link..."
+                    value={imageUrlInput}
+                    onChange={(e) => setImageUrlInput(e.target.value)}
+                  />
+                  <Button type="button" onClick={handleAddImageUrl} variant="outline" className="shrink-0">
+                    <Plus className="h-4 w-4 mr-2" /> Add Link
+                  </Button>
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Option 2: Upload File</label>
+                <div className="relative border-2 border-dashed border-slate-350 rounded-lg h-[44px] flex items-center justify-center bg-slate-50 hover:bg-slate-100 hover:border-primary/50 transition-all cursor-pointer">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    onChange={handleFileUpload}
+                    disabled={uploading}
+                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                  />
+                  <div className="flex items-center gap-2 text-slate-700 text-sm font-medium">
+                    {uploading ? (
+                      <>
+                        <Loader2 className="h-4 w-4 animate-spin text-primary" />
+                        <span>Uploading...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Plus className="h-4 w-4 text-primary" />
+                        <span>Choose Photo File(s)</span>
+                      </>
+                    )}
+                  </div>
+                </div>
+              </div>
             </div>
 
             {images.length === 0 ? (
               <div className="border-2 border-dashed border-slate-200 rounded-lg p-8 flex flex-col items-center justify-center text-slate-400">
                 <ImageIcon className="h-10 w-10 mb-2" />
-                <span className="text-sm">No images added. Paste image URL above.</span>
+                <span className="text-sm">No images added. Choose file above or paste image URL.</span>
               </div>
             ) : (
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
