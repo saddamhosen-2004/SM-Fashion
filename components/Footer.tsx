@@ -97,7 +97,17 @@ export function Footer() {
 
         <div className="mt-8 pt-8 border-t border-slate-800 text-center text-xs text-slate-400 space-y-1">
           <p>© {currentYear} SM Fashion. All rights reserved.</p>
-          <p className="text-slate-300 font-semibold">Developed with 💙 by Saddam Bin Mazid</p>
+          <p className="text-slate-300 font-semibold">
+            Developed with 💙 by{' '}
+            <a
+              href="https://dgtalcommerce.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-primary transition-colors underline decoration-dotted"
+            >
+              dgtalcommerce.com
+            </a>
+          </p>
         </div>
       </div>
     </footer>
